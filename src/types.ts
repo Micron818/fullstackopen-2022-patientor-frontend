@@ -5,16 +5,16 @@ export interface Diagnosis {
 }
 
 export enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other"
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
 }
 
-export interface Patient {
-  id: string;
-  name: string;
-  occupation: string;
-  gender: Gender;
+export class Patient {
+  id = '';
+  name = '';
+  occupation = '';
+  gender: Gender = Gender.Female;
   ssn?: string;
   dateOfBirth?: string;
 }

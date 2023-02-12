@@ -12,7 +12,7 @@ export type Action =
     }
   | {
       type: 'SET_PATIENT';
-      payload: Patient[];
+      payload: Patient;
     };
 
 export const reducer = (state: State, action: Action): State => {
@@ -37,17 +37,23 @@ export const reducer = (state: State, action: Action): State => {
         },
       };
     case 'SET_PATIENT':
-      return {
-        ...state,
-        patientDetails: {
-          ...action.payload.reduce(
-            (memo, patient) => ({ ...memo, [patient.id]: patient }),
-            {}
-          ),
-          ...state.patientDetails,
-        },
-      };
+      return { ...state, patientArr: state.patientArr.concat(action.payload) };
+
     default:
       return state;
   }
+};
+
+export const setPatientList = (patientList: Patient[]) => {
+  return {
+    type: 'SET_PATIENT_LIST' as const,
+    payload: patientList,
+  };
+};
+
+export const setPatientArr = (patient: Patient) => {
+  return {
+    type: 'SET_PATIENT' as const,
+    payload: patient,
+  };
 };

@@ -5,12 +5,12 @@ import { Action } from './reducer';
 
 export type State = {
   patients: { [id: string]: Patient };
-  patientDetails: { [id: string]: Patient };
+  patientArr:Patient[];
 };
 
 const initialState: State = {
   patients: {},
-  patientDetails: {},
+  patientArr:[],
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([
@@ -32,3 +32,10 @@ export const StateProvider = ({ reducer, children }: StateProviderProps) => {
   );
 };
 export const useStateValue = () => useContext(StateContext);
+
+// export const setPatientList = (patientListFromApi)=>{
+
+//   dispatch({ type: 'SET_PATIENT_LIST', payload: patientListFromApi });
+// }
+
+

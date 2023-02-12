@@ -5,38 +5,23 @@ import { useParams } from 'react-router-dom';
 import { apiBaseUrl } from '../constants';
 import { Patient, Gender } from '../types';
 import { Male, Female, Transgender } from '@mui/icons-material';
-import { useStateValue } from '../state';
+import { setPatientArr, useStateValue } from '../state';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
-  const initialSate: Patient = {
-    id: '',
-    name: '',
-    occupation: '',
-    gender: Gender.Male,
-  };
-
-  // const [patient, setPatient] = useState(initialSate);
-  // const [{ patients }, dispatchPatients] = useStateValue();
-
-  const [{ patientDetails }, dispatch] = useStateValue();
-  const [patient, setPatient] = useState(initialSate);
+  const [{ patientArr }, dispatch] = useStateValue();
+  const [patient, setPatient] = useState(new Patient());
   useEffect(() => {
     const fetchPatient = async () => {
       try {
         if (!id) throw new Error('id undefined!');
-        const existedPatient = Object.values(patientDetails).find(
-          (v) => v.id === id
-        );
+        const existedPatient = patientArr.find((v) => v.id === id);
         if (existedPatient) {
           setPatient(existedPatient);
         } else {
           const res = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
           setPatient(res.data);
-          dispatch({
-            type: 'SET_PATIENT',
-            payload: Object.values(patientDetails).concat(res.data),
-          });
+          dispatch(setPatientArr(res.data));
         }
       } catch (error) {
         console.log(error);
