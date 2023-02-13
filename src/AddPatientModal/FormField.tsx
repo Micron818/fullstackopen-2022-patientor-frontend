@@ -7,7 +7,7 @@ import {
   TextField as TextFieldMUI,
   Typography,
 } from "@material-ui/core";
-import { Diagnosis, Gender } from "../types";
+import { Diagnoses, Gender } from "../types";
 import { InputLabel } from "@material-ui/core";
 import Input from '@material-ui/core/Input';
 
@@ -100,27 +100,27 @@ export const NumberField = ({ field, label, min, max }: NumberProps) => {
   );
 };
 
-export const DiagnosisSelection = ({
+export const diagnosesSelection = ({
   diagnoses,
   setFieldValue,
   setFieldTouched,
 }: {
-  diagnoses: Diagnosis[];
-  setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
-  setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>["setFieldTouched"];
+  diagnoses: Diagnoses[];
+  setFieldValue: FormikProps<{ diagnosesCodes: string[] }>["setFieldValue"];
+  setFieldTouched: FormikProps<{ diagnosesCodes: string[] }>["setFieldTouched"];
 }) => {
   const [selectedDiagnoses, setDiagnoses] = useState<string[]>([]);
-  const field = "diagnosisCodes";
+  const field = "diagnosesCodes";
   const onChange = (data: string[]) => {    
     setDiagnoses([...data]);
     setFieldTouched(field, true);
     setFieldValue(field, selectedDiagnoses);
   };
 
-  const stateOptions = diagnoses.map((diagnosis) => ({
-    key: diagnosis.code,
-    text: `${diagnosis.name} (${diagnosis.code})`,
-    value: diagnosis.code,
+  const stateOptions = diagnoses.map((diagnoses) => ({
+    key: diagnoses.code,
+    text: `${diagnoses.name} (${diagnoses.code})`,
+    value: diagnoses.code,
   }));
 
   return (
