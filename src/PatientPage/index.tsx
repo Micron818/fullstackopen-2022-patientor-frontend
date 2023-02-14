@@ -4,47 +4,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { apiBaseUrl } from '../constants';
 import { Patient, Gender } from '../types';
-import { Male, Female, Transgender, Circle } from '@mui/icons-material';
+import { Male, Female, Transgender } from '@mui/icons-material';
 import { setPatientArr, useStateValue } from '../state';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import List from '@mui/material/List';
-import Container from '@mui/material/Container';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import { EntryDetails } from './EntryDetails';
 
-const Entries = (props: { patient: Patient }) => {
-  const patient = props.patient;
-
-  const [{ diagnoses }] = useStateValue();
-
-  const getCodeName = (code: string) => {
-    return diagnoses.find((diagnose) => diagnose.code === code)?.name ?? '';
-  };
-
+const Entries = ({ patient }: { patient: Patient }) => {
   return (
     <>
       <Typography variant="h5" paddingTop="1em">
         entries
       </Typography>
-      {patient.entries.map((v) => (
-        <Container key={v.id}>
-          {v.date}
-          {v.description}
-          <List>
-            {v.diagnosisCodes?.map((code) => (
-              <ListItem key={code} disablePadding={true}>
-                <ListItemIcon sx={{ minWidth: '1em' }}>
-                  <Circle
-                    style={{
-                      fontSize: '0.5em',
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary={`${code} ${getCodeName(code)}`} />
-              </ListItem>
-            ))}
-          </List>
-        </Container>
+      {patient.entries.map((entry) => (
+        <EntryDetails key={entry.id} entry={entry} />
       ))}
     </>
   );
