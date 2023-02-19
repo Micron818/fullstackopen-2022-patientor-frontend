@@ -18,13 +18,12 @@ import {
 } from '../AddPatientModal/FormField';
 import { useStateValue } from '../state';
 
-import { EntryTypeEnum } from '../types';
+import { EntryTypeEnum, EntryBody, HealthCheckRating } from '../types';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  // onSubmit: (values: EntryWithoutId) => void;
-  onSubmit: () => void;
+  onSubmit: (values: EntryBody) => void;
   error?: string;
 }
 
@@ -39,16 +38,15 @@ const AddEntryForm = ({ open, onClose, onSubmit, error }: Props) => {
   return (
     <Formik
       initialValues={{
-        type: 'HealthCheck',
+        type: EntryTypeEnum.HealthCheck,
         date: today,
         specialist: '',
         diagnosisCodes: [],
         description: '',
-        discharge: {
-          date: today,
-          criteria: '',
-        },
         healthCheckRating: 1,
+        employerName: '',
+        sickLeave: { startDate: '', endDate: '' },
+        discharge: { date: '', criteria: '' },
       }}
       onSubmit={onSubmit}
       validate={(values) => {
@@ -71,13 +69,8 @@ const AddEntryForm = ({ open, onClose, onSubmit, error }: Props) => {
     >
       {({ isValid, dirty, setFieldValue, setFieldTouched, values }) => {
         return (
-          <Dialog
-            fullWidth={true}
-            open={open}
-            onSubmit={onSubmit}
-            onClose={() => onClose()}
-          >
-            <DialogTitle>Add a new patient</DialogTitle>
+          <Dialog fullWidth={true} open={open} onClose={() => onClose()}>
+            <DialogTitle>Add a new Entry</DialogTitle>
             <Divider />
             <DialogContent>
               {error && <Alert severity="error">{`Error: ${error}`}</Alert>}
@@ -104,10 +97,8 @@ const AddEntryForm = ({ open, onClose, onSubmit, error }: Props) => {
                   <Field
                     label="HealthCheckRating"
                     name="healthCheckRating"
-                    min={0}
-                    max={3}
-                    // min={HealthCheckRating.Healthy}
-                    // max={HealthCheckRating.CriticalRisk}
+                    min={HealthCheckRating.Healthy}
+                    max={HealthCheckRating.CriticalRisk}
                     component={NumberField}
                   />
                 )}
@@ -120,11 +111,25 @@ const AddEntryForm = ({ open, onClose, onSubmit, error }: Props) => {
                   />
                 )}
                 {values.type === 'OccupationalHealthcare' && (
-                  <Field
-                    label="SickLeave"
-                    name="sickLeave"
-                    component={TextField}
-                  />
+                  <Container>
+                    <Typography
+                      variant="subtitle2"
+                      color="grey.500"
+                      gutterBottom={true}
+                    >
+                      SickLeave
+                    </Typography>
+                    <Field
+                      label="StartDate"
+                      name="sickLeave.startDate"
+                      component={TextField}
+                    />
+                    <Field
+                      label="EndDate"
+                      name="sickLeave.endDate"
+                      component={TextField}
+                    />
+                  </Container>
                 )}
                 {/* just visible when type Hospital */}
                 {values.type === 'Hospital' && (

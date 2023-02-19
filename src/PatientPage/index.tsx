@@ -1,4 +1,4 @@
-import {Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -53,7 +53,7 @@ const PatientPage = () => {
       </Typography>
       <Typography>ssn:{patient.ssn}</Typography>
       <Typography>occupation:{patient.occupation}</Typography>
-      <Entries patient={patient} />
+      <Entries patient={patient} setPatient={setPatient} />
     </>
   );
 };

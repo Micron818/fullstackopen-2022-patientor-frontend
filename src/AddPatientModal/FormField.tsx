@@ -112,11 +112,11 @@ export const DiagnosesSelection = ({
   setFieldTouched,
 }: {
   diagnoses: Diagnoses[];
-  setFieldValue: FormikProps<{ diagnosesCodes: string[] }>['setFieldValue'];
-  setFieldTouched: FormikProps<{ diagnosesCodes: string[] }>['setFieldTouched'];
+  setFieldValue: FormikProps<{ diagnosisCodes: string[] }>['setFieldValue'];
+  setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>['setFieldTouched'];
 }) => {
   const [selectedDiagnoses, setDiagnoses] = useState<string[]>([]);
-  const field = 'diagnosesCodes';
+  const field = 'diagnosisCodes';
   const onChange = (data: string[]) => {
     setDiagnoses([...data]);
     setFieldTouched(field, true);

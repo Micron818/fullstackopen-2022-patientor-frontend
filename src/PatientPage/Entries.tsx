@@ -1,14 +1,46 @@
 import { Button, Typography } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
-import { Patient } from '../types';
+import { apiBaseUrl } from '../constants';
+import { Patient, EntryBody, Entry } from '../types';
 import { AddEntryForm } from './AddEntryForm';
 import { EntryDetails } from './EntryDetails';
 
-export const Entries = ({ patient }: { patient: Patient }) => {
+interface EntriesProp {
+  patient: Patient;
+  setPatient: (patient: Patient) => void;
+}
+
+export const Entries = ({ patient, setPatient }: EntriesProp) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
-  // const onNewEntrySubmit = (values: EntryWithoutId) => {
-  const onNewEntrySubmit = () => {
+  const onNewEntrySubmit = async (values: EntryBody) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${patient.id}/entries`,
+        values
+      );
+
+      const updatedPatient = {
+        ...patient,
+        entries: patient.entries.concat(newEntry),
+      };
+
+      setPatient(updatedPatient);
+
+      // console.log(newEntry);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.error(e?.response?.data || 'Unrecognized axios error');
+        setError(
+          String(e?.response?.data?.error) || 'Unrecognized axios error'
+        );
+      } else {
+        console.error('Unknown error', e);
+        setError('Unknown error');
+      }
+    }
+
     onNewEntryClose();
   };
   const onNewEntryClose = () => {
