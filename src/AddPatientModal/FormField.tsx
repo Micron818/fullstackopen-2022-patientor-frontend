@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import {
-  Select,
   FormControl,
+  Input,
+  InputLabel,
   MenuItem,
+  Select,
   TextField as TextFieldMUI,
   Typography,
-} from "@material-ui/core";
-import { Diagnoses, Gender } from "../types";
-import { InputLabel } from "@material-ui/core";
-import Input from '@material-ui/core/Input';
+} from '@mui/material';
+import { ErrorMessage, Field, FieldProps, FormikProps } from 'formik';
+import { useState, useEffect } from 'react';
+import { Diagnoses, Gender } from '../types';
 
 // structure of a single option
-export type GenderOption = {
-  value: Gender;
+export type SelectOption = {
+  value: Gender | string;
   label: string;
 };
 
@@ -21,17 +21,19 @@ export type GenderOption = {
 type SelectFieldProps = {
   name: string;
   label: string;
-  options: GenderOption[];
+  options: SelectOption[];
 };
 
-const FormikSelect = ({ field, ...props }: FieldProps) => <Select {...field} {...props} />;
+const FormikSelect = ({ field, ...props }: FieldProps) => (
+  <Select {...field} {...props} />
+);
 
 export const SelectField = ({ name, label, options }: SelectFieldProps) => (
   <>
     <InputLabel>{label}</InputLabel>
     <Field
       fullWidth
-      style={{ marginBottom: "0.5em" }}
+      style={{ marginBottom: '0.5em' }}
       label={label}
       component={FormikSelect}
       name={name}
@@ -51,14 +53,14 @@ interface TextProps extends FieldProps {
 }
 
 export const TextField = ({ field, label, placeholder }: TextProps) => (
-  <div style={{ marginBottom: "1em" }}>
+  <div style={{ marginBottom: '1em' }}>
     <TextFieldMUI
       fullWidth
       label={label}
       placeholder={placeholder}
       {...field}
     />
-    <Typography variant="subtitle2" style={{ color: "red" }}>
+    <Typography variant="subtitle2" style={{ color: 'red' }}>
       <ErrorMessage name={field.name} />
     </Typography>
   </div>
@@ -74,10 +76,14 @@ interface NumberProps extends FieldProps {
 }
 
 export const NumberField = ({ field, label, min, max }: NumberProps) => {
-  const [value, setValue] = useState<number>();
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (typeof field.value === 'number') setValue(field.value);
+  }, [field.value]);
 
   return (
-    <div style={{ marginBottom: "1em" }}>
+    <div style={{ marginBottom: '1em' }}>
       <TextFieldMUI
         fullWidth
         label={label}
@@ -86,32 +92,32 @@ export const NumberField = ({ field, label, min, max }: NumberProps) => {
         {...field}
         value={value}
         onChange={(e) => {
-          const value = parseInt(e.target.value);
-          if (value === undefined) return;
-          if (value > max) setValue(max);
-          else if (value <= min) setValue(min);
-          else setValue(Math.floor(value));
-      }}
+          const newValue = parseInt(e.target.value);
+          if (newValue === undefined) return;
+          if (newValue > max) setValue(max);
+          else if (newValue <= min) setValue(min);
+          else setValue(Math.floor(newValue));
+        }}
       />
-      <Typography variant="subtitle2" style={{ color: "red" }}>
+      <Typography variant="subtitle2" style={{ color: 'red' }}>
         <ErrorMessage name={field.name} />
       </Typography>
     </div>
   );
 };
 
-export const diagnosesSelection = ({
+export const DiagnosesSelection = ({
   diagnoses,
   setFieldValue,
   setFieldTouched,
 }: {
   diagnoses: Diagnoses[];
-  setFieldValue: FormikProps<{ diagnosesCodes: string[] }>["setFieldValue"];
-  setFieldTouched: FormikProps<{ diagnosesCodes: string[] }>["setFieldTouched"];
+  setFieldValue: FormikProps<{ diagnosesCodes: string[] }>['setFieldValue'];
+  setFieldTouched: FormikProps<{ diagnosesCodes: string[] }>['setFieldTouched'];
 }) => {
   const [selectedDiagnoses, setDiagnoses] = useState<string[]>([]);
-  const field = "diagnosesCodes";
-  const onChange = (data: string[]) => {    
+  const field = 'diagnosesCodes';
+  const onChange = (data: string[]) => {
     setDiagnoses([...data]);
     setFieldTouched(field, true);
     setFieldValue(field, selectedDiagnoses);
@@ -126,7 +132,12 @@ export const diagnosesSelection = ({
   return (
     <FormControl style={{ width: 552, marginBottom: '30px' }}>
       <InputLabel>Diagnoses</InputLabel>
-      <Select multiple value={selectedDiagnoses} onChange={(e) => onChange(e.target.value as string[])} input={<Input />}>
+      <Select
+        multiple
+        value={selectedDiagnoses}
+        onChange={(e) => onChange(e.target.value as string[])}
+        input={<Input />}
+      >
         {stateOptions.map((option) => (
           <MenuItem key={option.key} value={option.value}>
             {option.text}

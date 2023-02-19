@@ -1,6 +1,5 @@
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, Divider } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { Dialog, DialogTitle, DialogContent, Divider,Alert } from "@mui/material";
 import AddPatientForm, { PatientFormValues } from "./AddPatientForm";
 
 interface Props {

@@ -41,10 +41,10 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
   sickLeave?: SickLeave;
 }
 
-interface Discharge {
+type Discharge = {
   date: string;
   criteria: string;
-}
+};
 
 export interface HospitalEntry extends BaseEntry {
   type: 'Hospital';
@@ -84,4 +84,10 @@ export class Patient {
   ssn?: string;
   dateOfBirth?: string;
   entries: Entry[] = [];
+}
+
+export enum EntryTypeEnum {
+  'HealthCheck' = 'HealthCheck',
+  'OccupationalHealthcare' = 'OccupationalHealthcare',
+  'Hospital' = 'Hospital',
 }

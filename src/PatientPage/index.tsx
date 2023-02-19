@@ -1,4 +1,4 @@
-import Typography from '@mui/material/Typography';
+import {Typography} from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -6,20 +6,7 @@ import { apiBaseUrl } from '../constants';
 import { Patient, Gender } from '../types';
 import { Male, Female, Transgender } from '@mui/icons-material';
 import { setPatientArr, useStateValue } from '../state';
-import { EntryDetails } from './EntryDetails';
-
-const Entries = ({ patient }: { patient: Patient }) => {
-  return (
-    <>
-      <Typography variant="h5" paddingTop="1em">
-        entries
-      </Typography>
-      {patient.entries.map((entry) => (
-        <EntryDetails key={entry.id} entry={entry} />
-      ))}
-    </>
-  );
-};
+import { Entries } from './Entries';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
