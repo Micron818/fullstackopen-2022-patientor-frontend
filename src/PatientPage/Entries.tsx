@@ -2,18 +2,17 @@ import { Button, Typography } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
 import { apiBaseUrl } from '../constants';
-import { Patient, EntryBody, Entry } from '../types';
+import { setPatient, setPatientArr, useStateValue } from '../state';
+import { EntryBody, Entry } from '../types';
 import { AddEntryForm } from './AddEntryForm';
 import { EntryDetails } from './EntryDetails';
 
-interface EntriesProp {
-  patient: Patient;
-  setPatient: (patient: Patient) => void;
-}
-
-export const Entries = ({ patient, setPatient }: EntriesProp) => {
+export const Entries = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
+
+  const [{ patient, patientArr }, dispatch] = useStateValue();
+
   const onNewEntrySubmit = async (values: EntryBody) => {
     try {
       const { data: newEntry } = await axios.post<Entry>(
@@ -26,9 +25,13 @@ export const Entries = ({ patient, setPatient }: EntriesProp) => {
         entries: patient.entries.concat(newEntry),
       };
 
-      setPatient(updatedPatient);
+      dispatch(setPatient(updatedPatient));
 
-      // console.log(newEntry);
+      const updatedPatientArr = patientArr.map((value) =>
+        value.id === updatedPatient.id ? updatedPatient : value
+      );
+
+      dispatch(setPatientArr(updatedPatientArr));
     } catch (e) {
       if (axios.isAxiosError(e)) {
         console.error(e?.response?.data || 'Unrecognized axios error');

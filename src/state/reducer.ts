@@ -12,6 +12,10 @@ export type Action =
     }
   | {
       type: 'SET_PATIENT_ARR';
+      payload: Patient[];
+    }
+  | {
+      type: 'SET_PATIENT';
       payload: Patient;
     }
   | {
@@ -40,8 +44,17 @@ export const reducer = (state: State, action: Action): State => {
           [action.payload.id]: action.payload,
         },
       };
-    case 'SET_PATIENT_ARR':
-      return { ...state, patientArr: state.patientArr.concat(action.payload) };
+    case 'SET_PATIENT':
+      return {
+        ...state,
+        patient: action.payload,
+      };
+    case 'SET_PATIENT_ARR': {
+      return {
+        ...state,
+        patientArr: action.payload,
+      };
+    }
     case 'SET_DIAGNOSES':
       return { ...state, diagnoses: state.diagnoses.concat(action.payload) };
     default:
@@ -56,9 +69,16 @@ export const setPatientList = (patientList: Patient[]) => {
   };
 };
 
-export const setPatientArr = (patient: Patient) => {
+export const setPatientArr = (patient: Patient[]) => {
   return {
     type: 'SET_PATIENT_ARR' as const,
+    payload: patient,
+  };
+};
+
+export const setPatient = (patient: Patient) => {
+  return {
+    type: 'SET_PATIENT' as const,
     payload: patient,
   };
 };
