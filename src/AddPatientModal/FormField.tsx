@@ -1,6 +1,5 @@
 import {
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -8,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ErrorMessage, Field, FieldProps, FormikProps } from 'formik';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Diagnoses, Gender } from '../types';
 
 // structure of a single option
@@ -118,9 +117,9 @@ export const DiagnosesSelection = ({
   const [selectedDiagnoses, setDiagnoses] = useState<string[]>([]);
   const field = 'diagnosisCodes';
   const onChange = (data: string[]) => {
-    setDiagnoses([...data]);
+    setDiagnoses(data);
     setFieldTouched(field, true);
-    setFieldValue(field, selectedDiagnoses);
+    setFieldValue(field, data);
   };
 
   const stateOptions = diagnoses.map((diagnoses) => ({
@@ -130,13 +129,13 @@ export const DiagnosesSelection = ({
   }));
 
   return (
-    <FormControl style={{ width: 552, marginBottom: '30px' }}>
+    <FormControl style={{ width: 552, marginBottom: '30px' }} size="small">
       <InputLabel>Diagnoses</InputLabel>
       <Select
         multiple
         value={selectedDiagnoses}
         onChange={(e) => onChange(e.target.value as string[])}
-        input={<Input />}
+        label="Diagnoses"
       >
         {stateOptions.map((option) => (
           <MenuItem key={option.key} value={option.value}>
